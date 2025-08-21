@@ -1,0 +1,98 @@
+body {
+  background-color: #3c2f1a;
+  font-family: 'Georgia', serif;
+  color: #f5deb3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.perfil-container {
+  display: flex;
+  background: #5c4320;
+  border: 4px solid #2d1d0d;
+  border-radius: 12px;
+  padding: 20px;
+  width: 800px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+.personaje {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 250px;
+  height: 400px;
+  background: #333 url("caballero.png") center/cover no-repeat;
+  border: 3px solid #222;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  background: #d4a65a;
+  border: 2px solid #6e4a1e;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.stats {
+  flex: 2;
+  padding-left: 30px;
+}
+
+.stats h2 {
+  margin-bottom: 20px;
+}
+
+.stat {
+  margin-bottom: 15px;
+}
+
+.stat span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.barra {
+  width: 100%;
+  height: 12px;
+  background: #2d1d0d;
+  border: 1px solid #111;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, #d47c2f, #ffcc66);
+}
+
+#radarChart {
+  margin-top: 30px;
+  max-width: 400px;
+  max-height: 300px;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+.icon {
+  background: #d4a65a;
+  border: 2px solid #6e4a1e;
+  border-radius: 50%;
+  padding: 15px;
+  font-size: 20px;
+  cursor: pointer;
+}

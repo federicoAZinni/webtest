@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil RPG</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="perfil-container">
+    <!-- Personaje -->
+    <div class="personaje">
+      <div class="avatar"></div>
+      <button class="btn">Badges</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <h2 id="nivel">Lvl. 4</h2>
+      <div id="stats-bars"></div>
+      <canvas id="radarChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Footer con iconos -->
+  <div class="footer">
+    <div class="icon">⚙️</div>
+    <div class="icon">🎖️</div>
+    <div class="icon">🛡️</div>
+  </div>
+
+  <!-- Script -->
+  <script>
+    // 🎯 Datos del perfil
+    const perfil = {
+      nivel: 4,
+      stats: {
+        "Programming": 80,
+        "3D Art": 65,
+        "Sound": 50,
+        "Level Design": 70,
+        "Game Design": 60
+      }
+    };
+
+    // 🟠 Renderizar nivel
+    document.getElementById("nivel").innerText = `Lvl. ${perfil.nivel}`;
+
+    // 🟠 Renderizar barras dinámicamente
+    const statsContainer = document.getElementById("stats-bars");
+    for (const [stat, value] of Object.entries(perfil.stats)) {
+      const div = document.createElement("div");
+      div.classList.add("stat");
+      div.innerHTML = `
+        <span>${stat}</span>
+        <div class="barra">
+          <div class="fill" style="width:${value}%;"></div>
+        </div>
+      `;
+      statsContainer.appendChild(div);
+    }
+
+    // 🟠 Gráfico Radar dinámico
+    const ctx = document.getElementById('radarChart');
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: Object.keys(perfil.stats),
+        datasets: [{
+          label: 'Stats',
+          data: Object.values(perfil.stats),
+          backgroundColor: 'rgba(212, 124, 47, 0.4)',
+          borderColor: '#ffcc66',
+          borderWidth: 2,
+          pointBackgroundColor: '#ffcc66'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          r: {
+            angleLines: { color: '#6e4a1e' },
+            grid: { color: '#3c2f1a' },
+            pointLabels: { color: '#f5deb3', font: { size: 14 } },
+            suggestedMin: 0,
+            suggestedMax: 100
+          }
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
