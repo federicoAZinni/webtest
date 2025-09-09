@@ -1,97 +1,119 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfil RPG</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfil – UI</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="perfil-container">
-    <!-- Personaje -->
-    <div class="personaje">
-      <div class="avatar"></div>
-      <button class="btn">Badges</button>
-    </div>
-
-    <!-- Stats -->
-    <div class="stats">
-      <h2 id="nivel">Lvl. 4</h2>
-      <div id="stats-bars"></div>
-      <canvas id="radarChart"></canvas>
-    </div>
-  </div>
-
-  <!-- Footer con iconos -->
-  <div class="footer">
-    <div class="icon">⚙️</div>
-    <div class="icon">🎖️</div>
-    <div class="icon">🛡️</div>
-  </div>
-
-  <!-- Script -->
-  <script>
-    // 🎯 Datos del perfil
-    const perfil = {
-      nivel: 4,
-      stats: {
-        "Programming": 80,
-        "3D Art": 65,
-        "Sound": 50,
-        "Level Design": 70,
-        "Game Design": 60
-      }
-    };
-
-    // 🟠 Renderizar nivel
-    document.getElementById("nivel").innerText = `Lvl. ${perfil.nivel}`;
-
-    // 🟠 Renderizar barras dinámicamente
-    const statsContainer = document.getElementById("stats-bars");
-    for (const [stat, value] of Object.entries(perfil.stats)) {
-      const div = document.createElement("div");
-      div.classList.add("stat");
-      div.innerHTML = `
-        <span>${stat}</span>
-        <div class="barra">
-          <div class="fill" style="width:${value}%;"></div>
+  <main class="page">
+    <section class="card">
+      <!-- Header -->
+      <header class="card__header">
+        <div class="user">
+          <div class="user__avatar">
+            <img src="imgAvatar.png" alt="Avatar" />
+          </div>
+          <div class="user__name pill pill--pink">Maira Rodriguez</div>
         </div>
-      `;
-      statsContainer.appendChild(div);
-    }
 
-    // 🟠 Gráfico Radar dinámico
-    const ctx = document.getElementById('radarChart');
-    new Chart(ctx, {
-      type: 'radar',
-      data: {
-        labels: Object.keys(perfil.stats),
-        datasets: [{
-          label: 'Stats',
-          data: Object.values(perfil.stats),
-          backgroundColor: 'rgba(212, 124, 47, 0.4)',
-          borderColor: '#ffcc66',
-          borderWidth: 2,
-          pointBackgroundColor: '#ffcc66'
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          r: {
-            angleLines: { color: '#6e4a1e' },
-            grid: { color: '#3c2f1a' },
-            pointLabels: { color: '#f5deb3', font: { size: 14 } },
-            suggestedMin: 0,
-            suggestedMax: 100
-          }
-        },
-        plugins: {
-          legend: { display: false }
-        }
-      }
-    });
-  </script>
+        <div class="level" aria-label="Nivel">
+          <span class="level__label">LV</span>
+          <span class="level__num">4</span>
+          <div class="level__xp" aria-hidden="true">
+            <div class="level__xp__fill" style="--pct:55%"></div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Body -->
+      <div class="card__body">
+        <!-- Panel izquierdo (placeholder) -->
+        <div class="left">
+           <img src="C:\Users\fede\public\imgAvatar.png" alt="Avatar" style="display: block; margin: 0 auto;" />
+          <div class="left__dock">
+          </div>
+        </div>
+
+        <!-- Panel derecho con tabs y contenido -->
+        <div class="right">
+          <nav class="tabs" role="tablist" aria-label="Secciones de perfil">
+            <!-- Dejamos "Graphic" como activo por defecto -->
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-stats" id="tab-stats">Stats</button>
+            <button class="tab tab--active" role="tab" aria-selected="true" aria-controls="panel-graphic" id="tab-graphic">Graphic</button>
+          </nav>
+
+          <!-- Panel: Graphic (telaraña/radar) -->
+          <section id="panel-graphic" role="tabpanel" aria-labelledby="tab-graphic" class="tabpanel is-active">
+            <div class="graphic">
+              <div class="graphic__wrap">
+                <canvas id="radarChart" aria-label="Gráfico de habilidades"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <!-- Panel: Stats (las barras sirven como fuente de datos) -->
+          <section id="panel-stats" role="tabpanel" aria-labelledby="tab-stats" class="tabpanel">
+            <div class="stats">
+              <div class="stat">
+                <div class="stat__icon">🧠</div>
+                <div class="stat__bar">
+                  <div class="bar"><div class="bar__fill" style="--pct:78%"></div></div>
+                </div>
+                <div class="stat__label">Programming</div>
+              </div>
+              <div class="stat">
+                <div class="stat__icon">📦</div>
+                <div class="stat__bar">
+                  <div class="bar"><div class="bar__fill" style="--pct:28%"></div></div>
+                </div>
+                <div class="stat__label">3d Art</div>
+              </div>
+              <div class="stat">
+                <div class="stat__icon">🎵</div>
+                <div class="stat__bar">
+                  <div class="bar"><div class="bar__fill" style="--pct:55%"></div></div>
+                </div>
+                <div class="stat__label">Sound</div>
+              </div>
+              <div class="stat">
+                <div class="stat__icon">🔳</div>
+                <div class="stat__bar">
+                  <div class="bar"><div class="bar__fill" style="--pct:46%"></div></div>
+                </div>
+                <div class="stat__label">Level Design</div>
+              </div>
+              <div class="stat">
+                <div class="stat__icon">🧩</div>
+                <div class="stat__bar">
+                  <div class="bar"><div class="bar__fill" style="--pct:40%"></div></div>
+                </div>
+                <div class="stat__label">Game Design</div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- Footer badges -->
+      <footer class="card__footer">
+        <button class="badge badge--gold" title="medalla">
+          <span class="badge__icon">⭐</span>
+        </button>
+        <button class="badge">
+          <span class="badge__icon">🏁</span>
+          <span class="badge__text">starter</span>
+        </button>
+        <button class="badge">
+          <span class="badge__icon">🙂</span>
+          <span class="badge__text">amable</span>
+        </button>
+        <button class="more">Ver más</button>
+      </footer>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
