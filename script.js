@@ -1,5 +1,3 @@
-
-
 // ===== Tabs accesibles =====
 const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
 function activateTab(tab) {
@@ -22,27 +20,84 @@ tabs.forEach(tab => {
   });
 });
 
-// Estado inicial: Graphic activo por defecto
+// Estado inicial: Stats activo por defecto
 const initial = document.getElementById('tab-stats') || tabs[0];
 if (initial) activateTab(initial);
 
-// ===== Animación simple de barras (Stats) =====
-window.addEventListener('load', () => {
-  document.querySelectorAll('.bar__fill').forEach(el => {
-    const pct = getComputedStyle(el).getPropertyValue('--pct').trim() || '0%';
-    el.style.width = '0%';
-    requestAnimationFrame(() => { el.style.width = pct; });
+// ===== Helpers: cargar skills de localStorage con fallback =====
+const KEY = 'skills.v1';
+const FALLBACK = [
+  { label:'Programming', value:78, icon:'🧠' },
+  { label:'3d Art', value:28, icon:'📦' },
+  { label:'Sound', value:55, icon:'🎵' },
+  { label:'Level Design', value:46, icon:'🔳' },
+  { label:'Game Design', value:40, icon:'🧩' },
+];
+
+function loadSkills() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return [...FALLBACK];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed) || !parsed.length) return [...FALLBACK];
+    return parsed.map(s => ({
+      label: String(s.label ?? '').slice(0,40) || 'Skill',
+      value: Math.max(0, Math.min(100, Number(s.value ?? 0))),
+      icon: String(s.icon ?? '').slice(0,4)
+    })).slice(0, 12);
+  } catch {
+    return [...FALLBACK];
+  }
+}
+
+// ===== Pintar Stats desde los datos =====
+function renderStats() {
+  const wrap = document.querySelector('.stats');
+  if (!wrap) return;
+  const data = loadSkills();
+  wrap.innerHTML = '';
+  data.forEach(s => {
+    const row = document.createElement('div');
+    row.className = 'stat';
+    row.innerHTML = `
+      <div class="stat__icon">${s.icon || '✨'}</div>
+      <div class="stat__bar">
+        <div class="bar"><div class="bar__fill" style="--pct:${s.value}%"></div></div>
+      </div>
+      <div class="stat__label">${s.label}</div>
+    `;
+    wrap.appendChild(row);
   });
+  // animación
+  requestAnimationFrame(() => {
+    wrap.querySelectorAll('.bar__fill').forEach(el => {
+      const pct = getComputedStyle(el).getPropertyValue('--pct').trim() || '0%';
+      el.style.width = '0%';
+      requestAnimationFrame(() => { el.style.width = pct; });
+    });
+  });
+}
+
+// ===== Animación de XP en el header =====
+window.addEventListener('load', () => {
   const xp = document.querySelector('.level__xp__fill');
   if (xp) {
     const pct = getComputedStyle(xp).getPropertyValue('--pct').trim() || '0%';
     xp.style.width = '0%';
     requestAnimationFrame(() => { xp.style.width = pct; });
   }
+  renderStats();
 });
 
-
 // ===== Radar Chart (sin librerías) =====
+function getRadarData() {
+  const data = loadSkills();
+  return {
+    labels: data.map(s => s.label),
+    values: data.map(s => s.value)
+  };
+}
+
 function renderRadar() {
   const panel = document.getElementById('panel-graphic');
   if (!panel || !panel.classList.contains('is-active')) return;
@@ -51,11 +106,10 @@ function renderRadar() {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  // --- Datos fijos (como tu maqueta) ---
-  const labels = ["Programming", "3d Art", "Sound", "Level Design", "Game Design"];
-  const values = [78, 28, 55, 46, 40]; // en % (0..100)
+  const { labels, values } = getRadarData();
+  const N = labels.length || 5;
 
-  // --- Medidas del canvas (robustas incluso si el panel tiene tamaños raros) ---
+  // --- Medidas del canvas ---
   const wrap = canvas.parentElement;
   const wrapW = (wrap?.getBoundingClientRect().width || 480);
   const cssW = Math.max(320, Math.min(520, Math.floor(wrapW - 32) || 480));
@@ -73,7 +127,6 @@ function renderRadar() {
   const w = cssW, h = cssH;
   const cx = w / 2;
   const cy = h / 2 + 6;
-  const N = labels.length;
   const radius = Math.min(w, h) * 0.36;
   const step = (Math.PI * 2) / N;
 
@@ -169,9 +222,8 @@ function renderRadar() {
 // Redibuja en resize y al abrir el tab
 window.addEventListener('resize', renderRadar);
 document.getElementById('tab-graphic')?.addEventListener('click', () => {
-  // pequeño delay por si hay animaciones de tab
   setTimeout(renderRadar, 0);
 });
-
-// Primer render (por si Graphic ya está activo al cargar)
 window.addEventListener('DOMContentLoaded', renderRadar);
+
+
