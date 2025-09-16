@@ -37,7 +37,7 @@ body{
 /* Nivel */
 .level{background:#7f8ef1; color:#fff; border-radius: 14px; padding:6px 10px; display:flex; gap:8px; align-items:center;}
 .level__num{ font-weight: 900; font-size: 1.25rem; }
-.level__xp{ width:68px; height:10px; background:#2f5bd1; border-radius:999px; overflow:hidden; position:relative; }
+.level__xp{ width:20rem; height:20px; background:#2f5bd1; border-radius:999px; overflow:hidden; position:relative; }
 .level__xp__fill{ position:absolute; inset:0; width: var(--pct,55%); background:#53d07c; }
 
 /* Body grid */
